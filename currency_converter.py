@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 from forex_python.converter import CurrencyCodes
+import pkgutil
 import json
 
 parser = argparse.ArgumentParser(description='Currency converter.')
@@ -20,11 +21,11 @@ def currency_symbol_to_code(symbol):
         return 'USD'
     elif symbol=='£':
         return 'GBP'
-    with open('currencies.json') as f:
-        currency_data = json.loads(f.read())
-    currency_dict = next((item['cc'] for item in currency_data if item["symbol"] == symbol), None)
-    return currency_dict
+    currency_data = json.loads(pkgutil.get_data('forex_python.converter', 'raw_data/currencies.json').decode('utf-8'))
+    currency_code = next((item['cc'] for item in currency_data if item["symbol"] == symbol), None)
+    return currency_code
 
 #print(args)
 for symbol in '₫₹€£$¥-₪':
     print(currency_symbol_to_code(symbol))
+
