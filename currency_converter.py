@@ -34,7 +34,7 @@ def convert_currency(args):
     input_currency_code = currency_symbol_to_code(args.input_currency)
     if args.output_currency:
         output_currency_code = currency_symbol_to_code(args.output_currency)
-        out_currencies = {output_currency_code: (c.convert(input_currency_code, output_currency_code, args.amount))}
+        out_currencies = {output_currency_code: (c.get_rate(input_currency_code, output_currency_code))}
     else:
         out_currencies = c.get_rates(input_currency_code)
 
