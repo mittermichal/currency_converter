@@ -1,4 +1,4 @@
-from flask import Flask,jsonify
+from flask import Flask, jsonify
 from flask_restful import Resource, Api, reqparse
 from currency_converter import convert_currency
 
@@ -21,7 +21,7 @@ req_parser.add_argument('output_currency')
 class CurrencyConverter(Resource):
     def get(self):
         args = req_parser.parse_args()
-        #print(args)
+        # print(args)
         return jsonify(convert_currency(args))
 
 

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import argparse
-from forex_python.converter import CurrencyRates,RatesNotAvailableError
+from forex_python.converter import CurrencyRates
 import pkgutil
 import json
-import sys
 
 
 parser = argparse.ArgumentParser(description='Currency converter.')
@@ -56,4 +55,4 @@ def convert_currency(args):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    print(json.dumps(convert_currency(args), indent=4))
+    print(json.dumps(convert_currency(args), indent=4, sort_keys=True))
