@@ -14,8 +14,6 @@ parser.add_argument('--input_currency', metavar='<3 letter currency code>', requ
 parser.add_argument('--output_currency', metavar='<3 letter currency code>',
                     help='requested/output currency - 3 letters name or currency symbol')
 
-args = parser.parse_args()
-
 
 # https://github.com/MicroPyramid/forex-python/blob/80a14321ea8ecc74fc277dcd3770c685d6442cb3/forex_python/converter.py#L115
 # https://github.com/MicroPyramid/forex-python/blob/9b479b76bdf05c210236550bbee47970c9e54a8c/forex_python/raw_data/currencies.json
@@ -29,32 +27,33 @@ def currency_symbol_to_code(symbol):
     return currency_code
 
 
+def convert_currency(args):
 
-c = CurrencyRates()
+    c = CurrencyRates()
 
-input_currency_code = currency_symbol_to_code(args.input_currency)
-try:
+    input_currency_code = currency_symbol_to_code(args.input_currency)
     if args.output_currency:
         output_currency_code = currency_symbol_to_code(args.output_currency)
         out_currencies = {output_currency_code: (c.convert(input_currency_code, output_currency_code, args.amount))}
     else:
         out_currencies = c.get_rates(input_currency_code)
-except RatesNotAvailableError:
-    print("Currency code or symbol not found")
-    sys.exit(2)
 
-out_currencies_json = {k: "%.2f" % round(v, 2) for k, v in out_currencies.items()}
+    out_currencies_json = {k: "%.2f" % round(v*args.amount, 2) for k, v in out_currencies.items()}
 
-# print(args)
+    # print(args)
 
-output_json = {
-    "input": {
-        "amount": args.amount,
-        "currency": input_currency_code
-    },
-    "output": out_currencies_json
-}
-# for symbol in '₫₹€£$¥-₪':
-#    print(currency_symbol_to_code(symbol))
+    output_json = {
+        "input": {
+            "amount": args.amount,
+            "currency": input_currency_code
+        },
+        "output": out_currencies_json
+    }
+    # for symbol in '₫₹€£$¥-₪':
+    #    print(currency_symbol_to_code(symbol))
 
-print(json.dumps(output_json, indent=4))
+    return output_json
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+    print(json.dumps(convert_currency(args), indent=4))
